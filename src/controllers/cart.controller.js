@@ -35,15 +35,17 @@ try {
 
 const removeCartItems=async(req,res)=>{
 try{
-
-
-
+const {productid}=req.body;
+const cartsss=await cart.findOne({user:req.user._id})
+if(!cartsss){
+    return res.status(404).json({message:"cart not found"})
+}
+ cartsss.items= cartsss.items.filter(i=>i.product.toString()!==productid)
+ await cartsss.save()
+ res.status(201).json({message:"item removed successfully"})
 
 }catch(error){
-
-    
-
+    console.log(error.message)
+    res.status(500).json({message:error.message})
 }
-
-
 }
