@@ -41,6 +41,7 @@ if(!cartsss){
     return res.status(404).json({message:"cart not found"})
 }
  cartsss.items= cartsss.items.filter(i=>i.product.toString()!==productid)
+ //hum unko filter kr rhe h jinko hme cart se nhi hatana h (jinko cart se nhi htana usko rkh le rhe h baaaki ko hta de rhe h )
  await cartsss.save()
  res.status(201).json({message:"item removed successfully"})
 
@@ -49,3 +50,5 @@ if(!cartsss){
     res.status(500).json({message:error.message})
 }
 }
+
+export {addCart , getUserCart , removeCartItems}
