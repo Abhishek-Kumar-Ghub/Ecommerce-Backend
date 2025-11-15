@@ -3,6 +3,7 @@ import connectDb from './config/databse.js';
 import router from './routes/user.route.js';
 import productRouter from './routes/product.route.js';
 import cartRouter from './routes/cart.route.js';
+import orderRouter from './routes/order.route.js';
 
 const app=express();
 app.use(express.json())
@@ -10,8 +11,10 @@ app.use(express.json())
 connectDb();
 
 app.use("/user",router)
-app.use("/router",productRouter)
+app.use("/product",productRouter)
 app.use("/cart",cartRouter)
+app.use("/order",orderRouter)
+
 
 app.get('/',(req,res)=>{
     res.send('server is running')
