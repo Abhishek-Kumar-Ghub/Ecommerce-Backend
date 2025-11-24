@@ -9,7 +9,7 @@ try {
     }
 
 const totalAmount=carts.items.reduce((sum,item)=>{
-sum+item.product.price*item.quantity
+return sum+item.product.price*item.quantity
 },0)
 
 const orders=await order.create({
@@ -29,12 +29,32 @@ res.status(201).json({message:"order placed successfully",orders})
 
 const getOrders=async(req,res)=>{
 try {
-    const orders=await order.find({user:req.user._id})
+    const orders=await order.find({user:req.user._id}).populate("items.product")
     res.status(200).json({message:"orders fetched successfully",orders})
 } catch (error) {
     res.status(500).json({message:error.message})
 }
 }
-export {placeOrder , getOrders}
+
+const getAllOrders=async(req,res)=>{
+try {
+    const orders=await order.find().populate("user").populate("items.product")
+    res.status(200).json({message:"all orders fetched successfully",orders})
+} catch (error) {
+    res.status(500).json({message:error.message})
+}
+}
+
+const updateOrderStatus=async(req,res)=>{
+try {
+    const {id}=req.params
+    const {status}=req.body
+    const updatedOrder=await order.findByIdAndUpdate(id,{status},{new:true})
+    res.status(200).json({message:"order status updated",order:updatedOrder})
+} catch (error) {
+    res.status(500).json({message:error.message})
+}
+}
+export {placeOrder , getOrders, getAllOrders, updateOrderStatus}
 
 

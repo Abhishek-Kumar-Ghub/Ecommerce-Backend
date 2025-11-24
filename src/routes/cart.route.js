@@ -5,7 +5,7 @@ import verifyToken from '../middleware/auth.middleware.js';
 const cartRouter=express.Router();
 
 cartRouter.post('/add',verifyToken,addCart)
-cartRouter.get('/',verifyToken,getUserCart)
-cartRouter.delete('/:productid',verifyToken,removeCartItems)
+cartRouter.get('/get',verifyToken,getUserCart)
+cartRouter.post('/remove',verifyToken,removeCartItems)
 
 export default cartRouter

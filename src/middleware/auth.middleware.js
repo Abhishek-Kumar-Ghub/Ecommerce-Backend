@@ -5,13 +5,21 @@ dotenv.config()
 
 const verifyToken=async(req,res,next)=>{
 try{
-const token=req.headers.authorization
+const authHeader=req.headers.authorization
+if(!authHeader || !authHeader.startsWith('Bearer ')){
+    return res.status(401).json({message:"No token provided"})
+}
+const token=authHeader.split(' ')[1]
 const decode=jwt.verify(token,process.env.JWT_SECRET_KEY)
-req.user=await User.findById(decode.id).select("-password")
+const user=await User.findById(decode.id).select("-password")
+if(!user){
+    return res.status(401).json({message:"User not found"})
+}
+req.user=user
 next();
 }catch(error){
-    console.log(error.message)
-    res.status(400).json({message:"invalid token"})
+    console.log('Token verification error:', error.message)
+    res.status(401).json({message:"invalid token"})
 }
 }
 export default verifyToken 

@@ -1,8 +1,30 @@
 import cart from "../models/cart.js"
+import product from "../models/product.js"
+import mongoose from 'mongoose'
 
 const addCart=async(req,res)=>{
 try {
     const {productid , quantity}=req.body
+    
+    // Input validation
+    if(!productid || typeof productid !== 'string'){
+        return res.status(400).json({message:"Invalid product ID"})
+    }
+    if(!quantity || typeof quantity !== 'number' || quantity < 1){
+        return res.status(400).json({message:"Invalid quantity"})
+    }
+    
+    // Validate ObjectId
+    if(!mongoose.Types.ObjectId.isValid(productid)){
+        return res.status(400).json({message:"Invalid product ID format"})
+    }
+    
+    // Check if product exists
+    const productExists = await product.findById(productid)
+    if(!productExists){
+        return res.status(404).json({message:"Product not found"})
+    }
+    
     let carts=await cart.findOne({user:req.user._id})
     //cart mera document h,
     if(!carts){
